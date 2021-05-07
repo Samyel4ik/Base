@@ -10,65 +10,67 @@ public class SweetnessesDao {
     }
 
     public List<Sweetness> findAll() throws SQLException {
-        List<Sweetness> list = new ArrayList<Sweetness>();
-        Statement statement = this.connection.createStatement();
-        String command_SQL = "SELECT*FROM Sweetnesses";
-        ResultSet resultSet = statement.executeQuery(command_SQL);
 
-        while (resultSet.next()) {
+        try (Statement statement = this.connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT*FROM Sweetnesses")) {
 
-            String name = resultSet.getString("name");
-            int prise = resultSet.getInt("prise");
-            int calories = resultSet.getInt("calories");
-            list.add(new Sweetness(name, calories, prise));
+            List<Sweetness> list = new ArrayList<Sweetness>();
+            while (resultSet.next()) {
+
+                String name = resultSet.getString("name");
+                int prise = resultSet.getInt("prise");
+                int calories = resultSet.getInt("calories");
+                list.add(new Sweetness(name, calories, prise));
+            }
+            return list;
         }
-
-        return list;
     }
 
     public Sweetness create(Sweetness sweetness) throws SQLException {
-        Statement statement = this.connection.createStatement();
-        String name = sweetness.getName();
-        int prise = sweetness.getPrise();
-        int calories = sweetness.getCalories();
+        try (Statement statement = this.connection.createStatement()) {
 
-        String command_SQL = "INSERT Sweetnesses (name,prise,calories) VALUES (" + "'" + name + "'" + "," + prise + "," + calories + ")";
-        statement.executeUpdate(command_SQL);
-        return sweetness;
+            String name = sweetness.getName();
+            int prise = sweetness.getPrise();
+            int calories = sweetness.getCalories();
+
+            String command_SQL = "INSERT Sweetnesses (name,prise,calories) VALUES (" + "'" + name + "'" + "," + prise + "," + calories + ")";
+            statement.executeUpdate(command_SQL);
+            return sweetness;
+        }
     }
 
     public Sweetness findByName(String name) throws SQLException {
-        Statement statement = this.connection.createStatement();
+        try (Statement statement = this.connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM sweetnesses WHERE name = " + "'" + name + "'")) {
 
-        String command_SQL = "SELECT * FROM sweetnesses WHERE name = " + "'" + name + "'";
-        ResultSet resultSet = statement.executeQuery(command_SQL);
+            while (resultSet.next()) {
 
-        while (resultSet.next()) {
+                String nameSw = resultSet.getString("name");
+                int prise = resultSet.getInt("prise");
+                int calories = resultSet.getInt("calories");
+                Sweetness sweetness = new Sweetness(nameSw, calories, prise);
+                return sweetness;
+            }
 
-            String nameSw = resultSet.getString("name");
-            int prise = resultSet.getInt("prise");
-            int calories = resultSet.getInt("calories");
-            Sweetness sweetness = new Sweetness(nameSw, calories, prise);
-            return sweetness;
+            return null;
         }
-
-        return null;
     }
 
     public Sweetness update(Sweetness sweetness) throws SQLException {
-        Statement statement = this.connection.createStatement();
-        String command_SQL = "UPDATE sweetnesses SET prise = " + sweetness.getPrise() + ", calories = " + sweetness.getCalories();
-        statement.executeUpdate(command_SQL);
+        try (Statement statement = this.connection.createStatement()) {
 
-        return sweetness;
+            String command_SQL = "UPDATE sweetnesses SET prise = " + sweetness.getPrise() + ", calories = " + sweetness.getCalories();
+            statement.executeUpdate(command_SQL);
 
+            return sweetness;
+        }
     }
 
     public void delete(String sweetnessName) throws SQLException {
-        Statement statement = this.connection.createStatement();
-        String command_SQL = "delete from Sweetnesses where name = " + "'" + sweetnessName + "'";
+        try (Statement statement = this.connection.createStatement()) {
+            String command_SQL = "delete from Sweetnesses where name = " + "'" + sweetnessName + "'";
 
-        statement.executeUpdate(command_SQL);
-
+            statement.executeUpdate(command_SQL);
+        }
     }
 }
