@@ -5,8 +5,8 @@ import java.util.List;
 public class SweetnessesDao {
     Connection connection;
 
-    public SweetnessesDao(Connection connection) throws SQLException {
-        this.connection = DriverManager.getConnection("jdbc:mysql://localhost/MyBase", "root", "6706598");
+    public SweetnessesDao(Connection connection) {
+        this.connection = connection;
     }
 
     public List<Sweetness> findAll() throws SQLException {
