@@ -33,7 +33,7 @@ public class SweetnessesDao {
             int prise = sweetness.getPrise();
             int calories = sweetness.getCalories();
 
-            String command_SQL = "INSERT Sweetnesses (name,prise,calories) VALUES (" + "'" + name + "'" + "," + prise + "," + calories + ")";
+            String command_SQL = String.format("INSERT Sweetnesses (name,prise,calories) VALUES (a='%s' ,b=%d,c=%d)", name, prise, calories);
             statement.executeUpdate(command_SQL);
             return sweetness;
         }
@@ -59,7 +59,7 @@ public class SweetnessesDao {
     public Sweetness update(Sweetness sweetness) throws SQLException {
         try (Statement statement = this.connection.createStatement()) {
 
-            String command_SQL = "UPDATE sweetnesses SET prise = " + sweetness.getPrise() + ", calories = " + sweetness.getCalories();
+            String command_SQL = String.format("UPDATE sweetnesses SET prise = a = %d ,b=%d", sweetness.getPrise(), sweetness.getCalories());
             statement.executeUpdate(command_SQL);
 
             return sweetness;
@@ -68,7 +68,7 @@ public class SweetnessesDao {
 
     public void delete(String sweetnessName) throws SQLException {
         try (Statement statement = this.connection.createStatement()) {
-            String command_SQL = "delete from Sweetnesses where name = " + "'" + sweetnessName + "'";
+            String command_SQL = String.format("delete from Sweetnesses where name = a = '%s'", sweetnessName);
 
             statement.executeUpdate(command_SQL);
         }

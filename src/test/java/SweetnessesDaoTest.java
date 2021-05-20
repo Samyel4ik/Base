@@ -22,5 +22,6 @@ class SweetnessesDaoTest {
 
     @Test
     void delete() {
+        
     }
 }
